@@ -46,7 +46,7 @@
 
 
     <!-- 回到顶部 -->
-    <view class="goTop icon-top" v-if="height>200" @click="goTop"></view>
+    <view class="goTop icon-top" v-if="height > 200" @click="goTop"></view>
 
   </view>
 </template>
@@ -92,7 +92,7 @@
       // 返回顶部
       goTop(){
         // API
-        uni.pageScrollTo({scrollTop:0});
+        uni.pageScrollTo({scrollTop: 0})
       }
     },
 
@@ -113,7 +113,7 @@
       // else {
       //   this.isShow = false;
       // }
-      this.height = e.scrollTop;
+      this.height = e.scrollTop
     },
 
     async onPullDownRefresh() {

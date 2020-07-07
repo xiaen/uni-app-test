@@ -12,10 +12,10 @@
       <view class="sup">
         <scroll-view scroll-y>
           <text 
-          v-for="(item,index) in list" 
+          v-for="(item, index) in list" 
           :key="item.cat_id"
-          :class="{'active':(index==ac_index?true:false)}"
-          @tap="change(index)">{{item.cat_name}}</text>
+          :class="{active: index === ac_index}"
+          @click="change(index)">{{item.cat_name}}</text>
         </scroll-view>
       </view>
 
@@ -71,22 +71,31 @@
     },
     // 
     methods:{
-      // 获取全部数据
-      async getList(){
-        // this 是 Vue一个实例化
-        // 
+      async getList() {
         const res =  await this.request({
           url:"/api/public/v1/categories"
         });
-
-        this.list = res;
+        this.list = res
       },
-      // 点击的时候
-      change(index){
-        // 拿到下标有啥用？
-        // 默认展示2 3级数据 list[0]
-        this.ac_index = index;
-      }
+      change(index) {
+        this.ac_index = index
+      },
+      // // 获取全部数据
+      // async getList(){
+      //   // this 是 Vue一个实例化
+      //   // 
+      //   const res =  await this.request({
+      //     url:"/api/public/v1/categories"
+      //   });
+
+      //   this.list = res;
+      // },
+      // // 点击的时候
+      // change(index){
+      //   // 拿到下标有啥用？
+      //   // 默认展示2 3级数据 list[0]
+      //   this.ac_index = index;
+      // }
     },
     // 进入页面的时候请求
     onLoad(){
