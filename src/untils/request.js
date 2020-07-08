@@ -4,9 +4,10 @@ export default function (Vue) {
         uni.showLoading({
             title: '加载中'
         });
-        const { url } = obj;
+        const { url, data } = obj;
         const [err, res] = await uni.request({
-            url: baseUrl + url
+            url: baseUrl + url,
+            data: data
         })
         uni.hideLoading();
         return res.data.message
