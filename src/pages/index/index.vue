@@ -100,6 +100,10 @@
       this.getswiperArr()
       this.getnavArr()
       this.getfloorsArr()
+    //   uni.showShareMenu({
+    //   withShareTicket: true,
+    //   menus: ['shareAppMessage', 'shareTimeline']
+    // })
     },
     
     // 页面滚动的时候
@@ -114,6 +118,14 @@
       //   this.isShow = false;
       // }
       this.height = e.scrollTop
+    },
+
+    onShareAppMessage() {
+      return {
+        title: '娃哈哈',
+        path: '/page/index/index',
+        imageUrl:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1594282256749&di=994f044cd403aecc3856255b5c0ca888&imgtype=0&src=http%3A%2F%2Fa3.att.hudong.com%2F14%2F75%2F01300000164186121366756803686.jpg'
+      }
     },
 
     async onPullDownRefresh() {

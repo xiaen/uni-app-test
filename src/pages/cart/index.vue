@@ -15,6 +15,27 @@
       <view class="item">
         <!-- 店铺名称 -->
         <view class="shopname">优购生活馆</view>
+        <view class="goods" v-for="item in data" :key="item.id">
+          <!-- 商品图片 -->
+          <image class="pic" :src="item.src"></image>
+          <!-- 商品信息 -->
+          <view class="meta">
+            <view class="name">{{item.name}}</view>
+            <view class="price">
+              <text>￥</text>{{item.price}}<text>.00</text>
+            </view>
+            <!-- 加减 -->
+            <view class="amount">
+              <text class="reduce">-</text>
+              <input type="number" :value="item.numb" class="number">
+              <text class="plus">+</text>
+            </view>
+          </view>
+          <!-- 选框 -->
+          <view class="checkbox">
+            <icon type="success" size="20" color="#ea4451"></icon>
+          </view>
+        </view>
         <view class="goods">
           <!-- 商品图片 -->
           <image class="pic" src="http://static.botue.com/ugo/uploads/goods_1.jpg"></image>
@@ -96,7 +117,14 @@
 
 <script>
   export default {
-    
+    data(){
+      return {
+        data: uni.getStorageSync('cart') || [],
+      }
+    },
+    onLoad() {
+      uni.getStorageSync('cart') || []
+    }
   }
 </script>
 

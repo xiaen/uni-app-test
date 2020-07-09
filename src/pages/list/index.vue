@@ -42,7 +42,7 @@
         //   url: '/pages/goods/index?query='+data
         // })
         uni.navigateTo({
-          url: '/pages/goods/index?query='+data
+          url: '/pages/goods/index?id='+data
         })
       },
       async getList() {

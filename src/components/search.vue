@@ -28,7 +28,7 @@
       <!-- 结果 -->
       <scroll-view scroll-y class="result" v-if="res">
         <navigator
-          :url="'/pages/goods/index?query='+item.goods_id"
+          :url="'/pages/goods/index?id='+item.goods_id"
           v-for="item in list"
           :key="item.goods_id"
         >{{item.goods_name}}</navigator>
