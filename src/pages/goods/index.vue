@@ -51,10 +51,15 @@
             name: this.data.goods_name,
             src: this.data.goods_small_logo,
             price: this.data.goods_price,
+            oneprice: this.data.goods_price,
             numb: 1,
             checked: true
           })
         }
+        uni.showToast({
+          title: '成功',
+          icon: 'success',
+        })
         uni.setStorageSync('cart', this.cartData)
       },
       goCart () {

@@ -15,7 +15,7 @@
       <view class="item">
         <!-- 店铺名称 -->
         <view class="shopname">优购生活馆</view>
-        <view class="goods" v-for="item in data" :key="item.id">
+        <view class="goods" v-for="(item, index) in data" :key="item.id">
           <!-- 商品图片 -->
           <image class="pic" :src="item.src"></image>
           <!-- 商品信息 -->
@@ -26,77 +26,14 @@
             </view>
             <!-- 加减 -->
             <view class="amount">
-              <text class="reduce">-</text>
+              <text class="reduce" @tap="numChange(-1, index)">-</text>
               <input type="number" :value="item.numb" class="number">
-              <text class="plus">+</text>
+              <text class="plus" @tap="numChange(1, index)">+</text>
             </view>
           </view>
           <!-- 选框 -->
           <view class="checkbox">
-            <icon type="success" size="20" color="#ea4451"></icon>
-          </view>
-        </view>
-        <view class="goods">
-          <!-- 商品图片 -->
-          <image class="pic" src="http://static.botue.com/ugo/uploads/goods_1.jpg"></image>
-          <!-- 商品信息 -->
-          <view class="meta">
-            <view class="name">【海外购自营】黎珐(ReFa) MTG日本 CARAT铂金微电流瘦脸瘦身提拉紧致V脸美容仪 【保税仓发货】</view>
-            <view class="price">
-              <text>￥</text>1399<text>.00</text>
-            </view>
-            <!-- 加减 -->
-            <view class="amount">
-              <text class="reduce">-</text>
-              <input type="number" value="1" class="number">
-              <text class="plus">+</text>
-            </view>
-          </view>
-          <!-- 选框 -->
-          <view class="checkbox">
-            <icon type="success" size="20" color="#ea4451"></icon>
-          </view>
-        </view>
-        <view class="goods">
-          <!-- 商品图片 -->
-          <image class="pic" src="http://static.botue.com/ugo/uploads/goods_2.jpg"></image>
-          <!-- 商品信息 -->
-          <view class="meta">
-            <view class="name">【海外购自营】黎珐(ReFa) MTG日本 CARAT铂金微电流瘦脸瘦身提拉紧致V脸美容仪 【保税仓发货】</view>
-            <view class="price">
-              <text>￥</text>1399<text>.00</text>
-            </view>
-            <!-- 加减 -->
-            <view class="amount">
-              <text class="reduce">-</text>
-              <input type="number" value="1" class="number">
-              <text class="plus">+</text>
-            </view>
-          </view>
-          <!-- 选框 -->
-          <view class="checkbox">
-            <icon type="success" size="20" color="#ea4451"></icon>
-          </view>
-        </view>
-        <view class="goods">
-          <!-- 商品图片 -->
-          <image class="pic" src="http://static.botue.com/ugo/uploads/goods_5.jpg"></image>
-          <!-- 商品信息 -->
-          <view class="meta">
-            <view class="name">【海外购自营】黎珐(ReFa) MTG日本 CARAT铂金微电流瘦脸瘦身提拉紧致V脸美容仪 【保税仓发货】</view>
-            <view class="price">
-              <text>￥</text>1399<text>.00</text>
-            </view>
-            <!-- 加减 -->
-            <view class="amount">
-              <text class="reduce">-</text>
-              <input type="number" value="1" class="number">
-              <text class="plus">+</text>
-            </view>
-          </view>
-          <!-- 选框 -->
-          <view class="checkbox">
-            <icon type="success" size="20" color="#ccc"></icon>
+            <icon type="success" size="20" :color="item.checked ? '#ea4451' : '#ccc'" @tap="checkChange(item.checked, index)"></icon>
           </view>
         </view>
       </view>
@@ -104,13 +41,13 @@
     <!-- 其它 -->
     <view class="extra">
       <label class="checkall">
-        <icon type="success" color="#ccc" size="20"></icon>
+        <icon type="success" :color="is ? '#ea4451' : '#ccc'" size="20" @tap="changeAll(is)"></icon>
         全选
       </label>
       <view class="total">
-        合计: <text>￥</text><label>14110</label><text>.00</text>
+        合计: <text>￥</text><label>{{allPrice}}</label><text>.00</text>
       </view>
-      <view class="pay">结算(3)</view>
+      <view class="pay">结算({{allNum}})</view>
     </view>
   </view>
 </template>
@@ -120,10 +57,77 @@
     data(){
       return {
         data: uni.getStorageSync('cart') || [],
+        allPrice: 0,
+        allNum: 0
+      }
+    },
+    computed: {
+      is(){
+        var arr = []
+        this.data.forEach(item => {
+          if(item.checked) {
+            arr.push(item)
+          }
+        });
+        return this.data.length === arr.length
+      },
+    },
+    methods: {
+      changeAll(val) {
+        // this.is = !val
+        this.data.forEach(item => {
+            item.checked = !val
+        });
+        uni.setStorageSync('cart', this.data);
+        this.allPrice = 0
+        this.allNum = 0
+        if(!val) {
+          this.data.forEach(item => {
+            this.allPrice += item.price
+            this.allNum++
+          })
+        }
+      },
+      checkChange(val, i) {
+        this.data[i].checked = !this.data[i].checked;
+        uni.setStorageSync('cart', this.data);
+        this.allPrice = 0
+        this.allNum = 0
+        this.data.forEach(item => {
+          if(item.checked) {
+          this.allPrice += item.price
+          this.allNum++
+          }
+        })
+      },
+      numChange(val, i) {
+        if (this.data[i].numb + val < 1 || this.data[i].numb + val > 15) {
+          return;
+        }
+        this.data[i].numb = this.data[i].numb + val;
+        this.data[i].price = this.data[i].oneprice * this.data[i].numb
+        uni.setStorageSync('cart', this.data)
+        this.allPrice = 0
+        this.data.forEach(item => {
+          if(item.checked) {
+          this.allPrice += item.price
+          }
+        })
       }
     },
     onLoad() {
-      uni.getStorageSync('cart') || []
+      // uni.getStorageSync('cart') || []
+    },
+    onShow() {
+      this.data = uni.getStorageSync('cart') || [];
+      this.allPrice = 0
+      this.allNum = 0
+      this.data.forEach(item => {
+        if(item.checked) {
+          this.allPrice += item.price
+          this.allNum++;
+        }
+      })
     }
   }
 </script>
