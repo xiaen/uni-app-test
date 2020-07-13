@@ -1,14 +1,17 @@
 <template>
   <view class="wrapper">
     <!-- 收货信息 -->
-    <view class="shipment">
+    <view class="shipment" v-if="addr">
       <view class="dt">收货人: </view>
       <view class="dd meta">
-        <text class="name">刘德华</text>
-        <text class="phone">13535337057</text>
+        <text class="name">{{addr.userName}}</text>
+        <text class="phone">{{addr.telNumber}}</text>
       </view>
       <view class="dt">收货地址:</view>
-      <view class="dd">广东省广州市天河区一珠吉</view>
+      <view class="dd">{{addr.details}}</view>
+    </view>
+    <view>
+      <button else @tap="getAddr">添加收货地址<button>
     </view>
     <!-- 购物车 -->
     <view class="carts">
@@ -47,7 +50,7 @@
       <view class="total">
         合计: <text>￥</text><label>{{allPrice}}</label><text>.00</text>
       </view>
-      <view class="pay">结算({{allNum}})</view>
+      <view class="pay" @tap="account">结算({{allNum}})</view>
     </view>
   </view>
 </template>
@@ -58,7 +61,8 @@
       return {
         data: uni.getStorageSync('cart') || [],
         allPrice: 0,
-        allNum: 0
+        allNum: 0,
+        addr: null
       }
     },
     computed: {
@@ -73,6 +77,44 @@
       },
     },
     methods: {
+      account() {
+        if(!this.addr) {
+          uni.showToast({
+            title: '请填写收货地址'
+          })
+          return;
+        }
+        var flag = false
+        this.data.forEach(item => {
+            if(item.checked) {
+            flag = true
+          }
+        })
+        if(!flag) {
+          uni.showToast({
+            title: '请选择商品'
+          })
+          return;
+        }
+        const token =  uni.getStorageSync('token')
+        if (!token) {
+          uni.showToast({
+            title: '请登录'
+          })
+          // 让用户去登录一个 非tabBar页面；
+          uni.navigateTo({
+            url:"/pages/auth/index"
+          });
+          return;
+        }
+      },
+      async getAddr() {
+      const [err, res] = await uni.chooseAddress()
+      console.log(res);
+      this.addr = res;
+      // 详细地址
+      this.addr.details = res.provinceName+res.cityName+res.countyName+res.detailInfo;
+      },
       changeAll(val) {
         // this.is = !val
         this.data.forEach(item => {
@@ -117,6 +159,9 @@
     },
     onLoad() {
       // uni.getStorageSync('cart') || []
+      // const [err, res] = uni.chooseAddress()
+      // console.log(res);
+      // this.addr = res
     },
     onShow() {
       this.data = uni.getStorageSync('cart') || [];

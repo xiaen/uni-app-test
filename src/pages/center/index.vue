@@ -3,8 +3,10 @@
     <!-- 个人资料 -->
     <view class="profile">
       <view class="meta">
-        <image class="avatar" src="http://static.botue.com/ugo/uploads/monkey.png"></image>
-        <text class="nickname">孙悟空</text>
+        <!-- <image src="http://static.botue.com/ugo/uploads/monkey.png"></image>
+        <text>孙悟空</text> -->
+        <open-data class="avatar" type="userAvatarUrl"></open-data>
+        <open-data class="nickname" type="groupName"></open-data>
       </view>
     </view>
     <!-- 统计 -->
@@ -38,15 +40,21 @@
     </view>
     <!-- 其它 -->
     <view class="extra">
-      <view class="item icon-arrow">联系客服</view>
-      <button class="item icon-arrow">意见反馈</button>
+      <view class="item icon-arrow" @tap="lianxi">联系客服</view>
+      <button class="item icon-arrow" open-type="feedback">意见反馈</button>
     </view>
   </view>
 </template>
 
 <script>
   export default {
-    
+    methods: {
+      lianxi() {
+        uni.makePhoneCall({
+          phoneNumber: '1340000' //仅为示例，并非真实的电话号码
+        })
+      }
+    }
   }
 </script>
 
@@ -70,6 +78,8 @@
     .meta {
 
       .avatar {
+        display: block;
+        overflow: hidden;
         width: 140rpx;
         height: 140rpx;
         border-radius: 50%;
