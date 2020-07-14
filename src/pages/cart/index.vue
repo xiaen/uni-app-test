@@ -10,8 +10,8 @@
       <view class="dt">收货地址:</view>
       <view class="dd">{{addr.details}}</view>
     </view>
-    <view>
-      <button else @tap="getAddr">添加收货地址<button>
+    <view v-else>
+      <button @tap="getAddr">添加收货地址</button>
     </view>
     <!-- 购物车 -->
     <view class="carts">
@@ -107,6 +107,11 @@
           });
           return;
         }
+        console.log(token);
+        
+        uni.navigateTo({
+          url: '/pages/order/index'
+        })
       },
       async getAddr() {
       const [err, res] = await uni.chooseAddress()

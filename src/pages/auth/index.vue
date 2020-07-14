@@ -20,6 +20,10 @@
         // 存token
         uni.setStorageSync('token', 123)
         uni.navigateBack()
+        uni.navigateTo({
+          url: '/pages/order/index'
+        })
+        uni.removeStorageSync('token')
       },
       getinfo(e) {
         console.log(e);
